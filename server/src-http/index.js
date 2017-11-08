@@ -23,6 +23,7 @@ app.use( require('body-parser').json() )
 app.post('/message', (req, res, next) => {
   const { message } = req.body
   allMessages.push(message)
+  io.emit('all-messages', { allMessages });
   res.status(200).end()
 })
 

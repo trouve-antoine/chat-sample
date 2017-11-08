@@ -16,8 +16,7 @@ const services = {}
 
 services.ioServerWithClient = require('socket.io')({ path: socketPath }).listen(http).of(socketName)
 
-// services.messageDb = require('./message-db-array')(config)(services)
-services.messageDb = require('./message-db-server')(config)(services)
+services.messageDb = require('./message-db-array')(config)(services)
 
 require('./socket-with-client')(config)(services)
 

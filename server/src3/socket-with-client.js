@@ -1,11 +1,11 @@
 module.exports = config => services => {
   const { ioServerWithClient, messageDb } = services
 
-  ioServerWithClient.on('connection', function (socket) {
+  ioServerWithClient.on('connection', async function (socket) {
     console.log("A client connected !!!")
 
     socket.emit('all-messages', {
-      allMessages: messageDb.getAllMessages()
+      allMessages: await messageDb.getAllMessages()
     });
 
     socket.on('message', async function ({ message }) {

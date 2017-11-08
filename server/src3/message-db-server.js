@@ -2,8 +2,14 @@ const request = require('request')
 
 module.exports = config => services => {
   const { antoineHost, socketName, socketPath } = config
+  const { ioServerWithClient } = services
   
   const ioClientWithBackend = require('socket.io-client')(`http://${config.antoineHost}/${socketName}`, { path: socketPath });
+
+  ioClientWithBackend.on("all-messages", ({ allMessages }) => {
+    console.log("Got all messages from Antoine's computer")
+    ioServerWithClient.emit({ allMessages })
+  })
 
   return {
     appendMessage: message => new Promise((resolve, reject) => {
@@ -26,6 +32,9 @@ module.exports = config => services => {
         if (error) { reject(error) }
         resolve( body.allMessages )
       });
-    })
+    }),
+    close: () => {
+      ioClientWithBackend.close()
+    }
   }
 }

@@ -3,6 +3,6 @@ module.exports = () => {
 
   return {
     appendMessage: message => allMessages.push(message),
-    getAllMessages: () => [...allMessages]
+    getAllMessages: () => [...allMessages],
   }
 }
