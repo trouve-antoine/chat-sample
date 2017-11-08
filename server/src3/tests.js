@@ -1,7 +1,8 @@
 const assert = require('assert')
 
 describe("Test the message DB", () => {
-  const messageDb = require('./message-db-array')()
+  const services = {}
+  const messageDb = require('./message-db-array')()(services)
 
   it("There are no message at the begining", () => {
     assert.equal( messageDb.getAllMessages().length, 0 )

@@ -7,11 +7,14 @@ const express = require('express')
 
 const http = require('http').Server( express() )
 
-const io = require('socket.io')({ path: socketPath }).listen(http).of(socketName)
+const config = { /* no config for now */ }
+const services = {}
 
-const messageDb = require('./message-db-array')()
+services.ioWithClient = require('socket.io')({ path: socketPath }).listen(http).of(socketName)
 
-require('./socket-with-client')(io, messageDb)
+services.messageDb = require('./message-db-array')(config)(services)
+
+require('./socket-with-client')(config)(services)
 
 http.listen(port, hostName, err => {
   if (err) { console.error("Got error while listeing http", err) }

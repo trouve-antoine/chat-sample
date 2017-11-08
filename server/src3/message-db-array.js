@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = config => services => {
   const allMessages = []
 
   return {

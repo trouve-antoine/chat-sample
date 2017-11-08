@@ -1,4 +1,6 @@
-module.exports = (ioWithClient, messageDb) => {
+module.exports = config => services => {
+  const { ioWithClient, messageDb } = services
+
   ioWithClient.on('connection', function (socket) {
     console.log("A client connected !!!")
 

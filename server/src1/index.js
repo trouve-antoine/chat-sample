@@ -26,7 +26,6 @@ io.on('connection', function(socket){
   socket.on('message', function({ message }){
     console.log("Got message", message)
     allMessages.push(message)
-    socket.broadcast.emit('all-messages', { allMessages })
-    socket.emit('all-messages', { allMessages })
+    io.emit('all-messages', { allMessages })
   });
 });
