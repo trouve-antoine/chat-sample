@@ -1,5 +1,5 @@
-const port = 4546
-const hostName = "localhost"
+const port = 8080
+const hostName = "0.0.0.0"
 const socketPath = "/chat-test"
 const socketName = "chat"
 
@@ -32,13 +32,13 @@ app.get('/all-messages', (req, res, next) => {
 })
 
 io.on('connection', function (socket) {
-  console.log("A client connected !!!")
+  console.log("A client connected: " + socket.id)
 
   socket.emit('all-messages', { allMessages });
 
   socket.on('message', function ({ message }) {
     console.log("Got message", message)
     allMessages.push(message)
-    io.emit('all-messages', { allMessages })
+    socket.broadcast.emit('all-messages', { allMessages })
   });
 });
