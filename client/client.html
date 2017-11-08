@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test WebSocket</title>
+    <script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
+    <style>
+    a { color: blue; cursor: pointer; }
+    ul { padding: 1em; margin: 0 }
+    li { list-style: none }
+    li::before { content: "> "; color: lightgrey }
+    </style>
+  </head>
+
+  <body>
+    <input id="message-input"></input>
+    <a id="send">送信</a>
+    <ul id="message-list">
+    </ul>
+  </body>
+
+  <script>
+  const pre = document.getElementById("result")
+
+  initSocket()
+  
+  function initSocket(serverNumber) {
+    const socket = connectToSocket()
+
+    socket.on('all-messages', function({ allMessages }){
+      const messageList = document.getElementById("message-list")
+      emptyMessageList(messageList)
+      allMessages.forEach( function(message) {
+        appendMessageToList(messageList, message)
+      })
+    });
+
+    document.getElementById("send").onclick = function() {
+      const message = document.getElementById("message-input").value
+      socket.emit("message", { message })
+    }
+  }
+
+  function connectToSocket() {
+    const port = 4545
+    const hostName = "localhost"
+    const socketPath = "/chat-test"
+    const socketName = "chat"
+
+    const socket = io(`http://localhost:${port}/${socketName}`, { path: socketPath });
+
+    socket.on('connect', function () {
+      console.log(`Connected to ${hostName}:${port}.`)
+    });
+
+    return socket
+  }
+
+  function appendMessageToList(messageList, message) {
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(message));
+      messageList.appendChild(li);
+  }
+
+  function emptyMessageList(messageList) {
+    while (messageList.firstChild) {
+      messageList.removeChild(messageList.firstChild);
+    }
+  }
+  </script>
+</html>
