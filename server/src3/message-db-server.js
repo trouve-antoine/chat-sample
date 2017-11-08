@@ -2,13 +2,15 @@ const request = require('request')
 
 module.exports = config => services => {
   const { antoineHost, socketName, socketPath } = config
-  const { ioServerWithClient } = services
+  const { ioServerNamespaceWithClient, log } = services
   
   const ioClientWithBackend = require('socket.io-client')(`http://${config.antoineHost}/${socketName}`, { path: socketPath });
 
+  recieveAllMessagesHandlers = []
+
   ioClientWithBackend.on("all-messages", ({ allMessages }) => {
-    console.log("Got all messages from Antoine's computer")
-    ioServerWithClient.emit({ allMessages })
+    log.info(`Got all messages from Antoine's computer (#=${allMessages.length})`)
+    recieveAllMessagesHandlers.forEach( cb => cb(allMessages) )
   })
 
   return {
@@ -19,7 +21,7 @@ module.exports = config => services => {
         json: true,
         body: { message }
       }, (error, response, body) => {
-        if(error) { reject(error) }
+        if(error) { return reject(error) }
         resolve()
       });
     }),
@@ -29,10 +31,13 @@ module.exports = config => services => {
         url: `http://${antoineHost}/all-messages`,
         json: true
       }, (error, response, body) => {
-        if (error) { reject(error) }
+        if (error) { return reject(error) }
         resolve( body.allMessages )
       });
     }),
+    onRecieveAllMessages: cb => {
+      recieveAllMessagesHandlers.push(cb)
+    },
     close: () => {
       ioClientWithBackend.close()
     }

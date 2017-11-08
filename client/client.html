@@ -20,8 +20,6 @@
   </body>
 
   <script>
-  const pre = document.getElementById("result")
-
   initSocket()
   
   function initSocket(serverNumber) {
@@ -30,6 +28,7 @@
     socket.on('all-messages', function({ allMessages }){
       const messageList = document.getElementById("message-list")
       emptyMessageList(messageList)
+      allMessages.reverse()
       allMessages.forEach( function(message) {
         appendMessageToList(messageList, message)
       })

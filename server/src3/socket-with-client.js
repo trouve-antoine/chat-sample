@@ -1,22 +1,35 @@
 module.exports = config => services => {
-  const { ioServerWithClient, messageDb } = services
+  const { socketName } = config
+  const { ioServerNamespaceWithClient, messageDb, log } = services
 
-  ioServerWithClient.on('connection', async function (socket) {
-    console.log("A client connected !!!")
+  ioServerNamespaceWithClient.on('connection', async socket => {
+    console.log(`Got connection from client ${socket.id}`)
 
     socket.emit('all-messages', {
-      allMessages: await messageDb.getAllMessages()
-    });
+      allMessages: await getAllMessagesOrEmptyArray()
+    })
 
-    socket.on('message', async function ({ message }) {
-      console.log("Got message", message)
-      
+    messageDb.onRecieveAllMessages( broadcastAllMessagesToClients )
+
+    socket.on('message', async ({ message }) => {
+      log.log("Got message", message)
+
       await messageDb.appendMessage(message)
-
-      ioServerWithClient.emit('all-messages', {
-        allMessages: await messageDb.getAllMessages()
-      })
+      .catch(err => { log.error(err) })
+    
+      broadcastAllMessagesToClients( await getAllMessagesOrEmptyArray() )
     });
   });
 
+  const broadcastAllMessagesToClients = async (allMessages) => {
+    ioServerNamespaceWithClient.emit("all-messages", { allMessages })
+    
+    ioServerNamespaceWithClient.emit('all-messages', {
+      allMessages: await getAllMessagesOrEmptyArray()
+    })
+  }
+
+  const getAllMessagesOrEmptyArray = async () =>
+    messageDb.getAllMessages()
+    .catch(err => { log.error(err); return [] })
 }

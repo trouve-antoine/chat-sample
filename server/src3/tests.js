@@ -5,18 +5,20 @@ const config = {
   antoineHost: 'localhost:4546' // TODO: adapt the IP
 }
 
+const log = {
+  info: () => {},
+  warn: console.warn,
+  error: console.error
+}
+
 describe("Test the array message DB", () => {
-  const services = {}
+  const services = { log }
   const messageDb = require('./message-db-array')(config)(services)
   messageDbTests(messageDb)
 })
 
 describe("Test the server message DB", () => {
-  const services = {
-    ioServerWithClient: {
-      emit: () => { console.log("dummy emit") }
-    }
-  }
+  const services = { log }
   const messageDb = require('./message-db-server')(config)(services)
   messageDbTests(messageDb)
 })
@@ -24,20 +26,20 @@ describe("Test the server message DB", () => {
 function messageDbTests(messageDb) {
   it("There are no message at the begining", () =>
     messageDb.getAllMessages()
-      .then(allMessages => {
-        assert.equal(allMessages.length, 0)
-      })
+    .then(allMessages => {
+      assert.equal(allMessages.length, 0)
+    })
   )
 
   it("Add a message", async () =>
     messageDb.appendMessage("こんにちは")
-      .then(() =>
-        messageDb.getAllMessages()
-      )
-      .then(allMessages => {
-        assert.equal(allMessages.length, 1)
-        assert.equal(allMessages[0], "こんにちは")
-      })
+    .then(() =>
+      messageDb.getAllMessages()
+    )
+    .then(allMessages => {
+      assert.equal(allMessages.length, 1)
+      assert.equal(allMessages[0], "こんにちは")
+    })
   )
 
   it("Add another message", () => {
