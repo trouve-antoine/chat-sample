@@ -2,7 +2,7 @@ module.exports = config => services => {
   const allMessages = []
 
   return {
-    appendMessage: message => allMessages.push(message),
-    getAllMessages: () => [...allMessages]
+    appendMessage: message => Promise.resolve( allMessages.push(message) ),
+    getAllMessages: () => Promise.resolve( [...allMessages] )
   }
 }

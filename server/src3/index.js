@@ -7,12 +7,17 @@ const express = require('express')
 
 const http = require('http').Server( express() )
 
-const config = { /* no config for now */ }
+const config = {
+  socketName, socketPath,
+  antoineHost: 'localhost:4546' // TODO: adapt the IP
+}
+
 const services = {}
 
-services.ioWithClient = require('socket.io')({ path: socketPath }).listen(http).of(socketName)
+services.ioServerWithClient = require('socket.io')({ path: socketPath }).listen(http).of(socketName)
 
-services.messageDb = require('./message-db-array')(config)(services)
+// services.messageDb = require('./message-db-array')(config)(services)
+services.messageDb = require('./message-db-server')(config)(services)
 
 require('./socket-with-client')(config)(services)
 

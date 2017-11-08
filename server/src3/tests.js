@@ -4,15 +4,23 @@ describe("Test the message DB", () => {
   const services = {}
   const messageDb = require('./message-db-array')()(services)
 
-  it("There are no message at the begining", () => {
-    assert.equal( messageDb.getAllMessages().length, 0 )
-  })
+  it("There are no message at the begining", () =>
+    messageDb.getAllMessages()
+    .then( allMessages => {
+      assert.equal(allMessages.length, 0)
+    })
+  )
 
-  it("Add a message", () => {
+  it("Add a message", async () =>
     messageDb.appendMessage("こんにちは")
-    assert.equal(messageDb.getAllMessages().length, 1)
-    assert.equal(messageDb.getAllMessages()[0], "こんにちは")
-  })
+    .then( () =>
+      messageDb.getAllMessages()
+    )
+    .then(allMessages => {
+      assert.equal(allMessages.length, 1)
+      assert.equal(allMessages[0], "こんにちは")
+    })
+  )
 
   it("Add another message", () => {
     /* TODO */

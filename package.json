@@ -5,16 +5,21 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "http-server": "nodemon ./server/src-http/",
     "server1": "nodemon ./server/src1/",
     "server2": "nodemon ./server/src2/",
-    "test-server2": "mocha ./server/src2/tests"
+    "server3": "nodemon ./server/src3/",
+    "test-server2": "mocha ./server/src2/tests",
+    "test-server3": "mocha ./server/src3/tests"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
+    "request": "^2.83.0",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4"
   }
