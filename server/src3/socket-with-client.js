@@ -29,7 +29,7 @@ module.exports = config => services => {
     })
   }
 
-  const getAllMessagesOrEmptyArray = async () =>
+  const getAllMessagesOrEmptyArray = () =>
     messageDb.getAllMessages()
     .catch(err => { log.error(err); return [] })
 }
