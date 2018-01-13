@@ -1,6 +1,9 @@
-module.exports = config => services => {
-  const { socketName } = config
-  const { ioServerNamespaceWithClient, messageDb, log } = services
+const config = require('./config')
+const messageDb = require('./message-db-server')
+
+module.exports = (ioServerWithClient) => {
+  const log = console
+  const ioServerNamespaceWithClient = ioServerWithClient.of(config.socketName)
 
   ioServerNamespaceWithClient.on('connection', async socket => {
     console.log(`Got connection from client ${socket.id}`)

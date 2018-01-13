@@ -4,7 +4,6 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "http-server": "nodemon ./server/src-http/",
     "server1": "nodemon ./server/src1/",
     "server2": "nodemon ./server/src2/",
