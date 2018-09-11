@@ -5,12 +5,8 @@
   "main": "server.js",
   "scripts": {
     "http-server": "nodemon ./server/src-http/",
-    "server1": "nodemon ./server/src1/",
-    "server2": "nodemon ./server/src2/",
-    "server3": "nodemon ./server/src3/",
-    "test-server2": "mocha ./server/src2/tests",
-    "test-server3": "mocha ./server/src3/tests",
-    "test-server4": "mocha ./server/src4/tests"
+    "server": "cd server && ts-node ./src/",
+    "test-server": "mocha ./server/src/tests"
   },
   "author": "",
   "license": "ISC",

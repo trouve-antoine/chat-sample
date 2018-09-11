@@ -1,7 +1,9 @@
 import * as socketIo from 'socket.io';
-import { IMessageDB } from './message-db';
+import { ArrayMessageDb } from './message-db/array-db';
 
-export default function(ioWithClient: socketIo.Namespace, messageDb: IMessageDB) {
+export default function(ioWithClient: socketIo.Namespace) {
+  const messageDb = new ArrayMessageDb();
+
   ioWithClient.on('connection', async socket => {
     socket.emit('all-messages', {
       allMessages: await messageDb.getAllMessages()
