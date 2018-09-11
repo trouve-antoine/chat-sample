@@ -17,13 +17,13 @@ export class ServerMessageDb implements IMessageDB {
     this.ioClientWithBackend = socketClient(`http://${this.messageServerInfos.hostName}/${this.messageServerInfos.socketName}`, {
       path: this.messageServerInfos.socketPath
     });
-    this.ioClientWithBackend.on("all-messages", ({ allMessages }) => {
-      console.info(`Got all messages from Antoine's computer (#=${allMessages.length})`);
-      for(const cb of this.recieveAllMessagesCallbacks) cb(allMessages);
+    this.ioClientWithBackend.on("all-messages", (res: { allMessages: string[] }) => {
+      console.info(`Got all messages from Antoine's computer (#=${res.allMessages.length})`);
+      for(const cb of this.recieveAllMessagesCallbacks) cb(res.allMessages);
     })
   }
 
-  async appendMessage(message) {
+  async appendMessage(message: string) {
     await fetch(`http://${this.messageServerInfos.hostName}/message`, {
       method: 'POST',
       body: JSON.stringify({ message }),
