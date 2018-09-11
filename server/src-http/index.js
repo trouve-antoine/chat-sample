@@ -1,3 +1,6 @@
+// The message DB server.
+// To be put on AWS. All clients should connect to it.
+
 const port = 8080
 const hostName = "0.0.0.0"
 const socketPath = "/chat-test"
