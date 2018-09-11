@@ -6,7 +6,7 @@
   "scripts": {
     "http-server": "nodemon ./server/src-http/",
     "server": "cd server && ts-node ./src/",
-    "test-server": "mocha ./server/src/tests"
+    "test-server": "cd server &&  mocha -r ts-node/register ./test/test-*.ts"
   },
   "author": "",
   "license": "ISC",
