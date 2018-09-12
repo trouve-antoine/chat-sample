@@ -3,6 +3,8 @@ import * as http from 'http';
 import * as socket from 'socket.io';
 import configureSocketWithClient from './configure-socket-with-client';
 import { IServerInfos } from './server-infos';
+import { ServerMessageDB } from './message-db/server-message-db';
+import { MessageServerDriver } from './message-server/http-server';
 
 const thisServerInfos: IServerInfos = {
   port: 4545,
@@ -21,7 +23,10 @@ const app = express();
 const httpServer = new http.Server(app);
 const io = socket({ path: thisServerInfos.socketPath }).listen(httpServer).of(thisServerInfos.socketName);
 
-configureSocketWithClient(io);
+const messageServerDriver = new MessageServerDriver(antoineMessageServerInfos);
+const messageDb = new ServerMessageDB(messageServerDriver);
+
+configureSocketWithClient(io, messageDb);
 
 httpServer.listen(thisServerInfos.port, thisServerInfos.hostName, (err: Error) => {
   if (err) { console.error("Got error while listeing http", err) }

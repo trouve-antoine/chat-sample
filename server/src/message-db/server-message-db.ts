@@ -1,48 +1,28 @@
 import { IMessageDB, RecieveAllMessagesCallback } from ".";
-import fetch from 'node-fetch';
-import * as socketClient from 'socket.io-client';
-
-import { IServerInfos } from '../server-infos';
+import { IMessageServerDriver } from "../message-server";
 
 interface IAllMessagesResponse {
   allMessages: string[]
 }
 
-export class ServerMessageDb implements IMessageDB {
-  readonly messageServerInfos: IServerInfos;
-  readonly ioClientWithBackend: SocketIOClient.Socket;
+export class ServerMessageDB implements IMessageDB {
+  readonly messageServerDriver: IMessageServerDriver;
 
-  constructor(antoineHostInfos: IServerInfos) {
-    this.messageServerInfos = antoineHostInfos;
-    this.ioClientWithBackend = socketClient(`http://${this.messageServerInfos.hostName}/${this.messageServerInfos.socketName}`, {
-      path: this.messageServerInfos.socketPath
-    });
-    this.ioClientWithBackend.on("all-messages", (res: { allMessages: string[] }) => {
+  constructor(messageServerDriver: IMessageServerDriver) {
+    this.messageServerDriver = messageServerDriver;
+    
+    this.messageServerDriver.onSocketMessage("all-messages", (res: { allMessages: string[] }) => {
       console.info(`Got all messages from Antoine's computer (#=${res.allMessages.length})`);
       for(const cb of this.recieveAllMessagesCallbacks) cb(res.allMessages);
     })
   }
 
   async appendMessage(message: string) {
-    await fetch(`http://${this.messageServerInfos.hostName}/message`, {
-      method: 'POST',
-      body: JSON.stringify({ message }),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
+    await this.messageServerDriver.postJson('message', { message })
   }
 
   async getAllMessages() {
-    const res = await fetch(`http://${this.messageServerInfos.hostName}/all-messages`, {
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-
-    const resJson: IAllMessagesResponse = await res.json();
-
+    const resJson = await this.messageServerDriver.getJson<IAllMessagesResponse>('all-messages')
     return resJson.allMessages
   }
 
@@ -52,6 +32,6 @@ export class ServerMessageDb implements IMessageDB {
   }
   
   async close() {
-    this.ioClientWithBackend.close()
+    await this.messageServerDriver.close()
   }
 }
