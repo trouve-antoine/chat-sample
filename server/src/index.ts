@@ -14,7 +14,7 @@ const thisServerInfos: IServerInfos = {
 };
 
 const antoineMessageServerInfos: IServerInfos = {
-  hostName: "localhost:8080",
+  hostName: "54.95.166.188:8080",
   socketPath: "/chat-test",
   socketName: "chat"
 };

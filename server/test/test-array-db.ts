@@ -1,9 +1,9 @@
-import { ArrayMessageDb } from "../src/message-db/array-db";
+import { ArrayMessageDB } from "../src/message-db/array-db";
 
 const assert = require('assert')
 
 describe("Test the message DB", () => {
-  const messageDb = new ArrayMessageDb();
+  const messageDb = new ArrayMessageDB();
 
   it("There are no message at the begining", async () => {
     const allMessages = await messageDb.getAllMessages();
