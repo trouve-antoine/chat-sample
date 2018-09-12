@@ -1,6 +1,6 @@
 import { IMessageDB, RecieveAllMessagesCallback } from ".";
 
-export class ArrayMessageDb implements IMessageDB {
+export class ArrayMessageDB implements IMessageDB {
   allMessages: string[] = [];
 
   async appendMessage(messages: string) {

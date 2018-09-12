@@ -8,7 +8,7 @@ interface IAllMessagesResponse {
   allMessages: string[]
 }
 
-export class ServerMessageDb implements IMessageDB {
+export class ServerMessageDB implements IMessageDB {
   readonly messageServerInfos: IServerInfos;
   readonly ioClientWithBackend: SocketIOClient.Socket;
 

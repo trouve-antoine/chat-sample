@@ -1,8 +1,8 @@
 import * as socketIo from 'socket.io';
-import { ArrayMessageDb } from './message-db/array-db';
+import { ArrayMessageDB } from './message-db/array-db';
 
 export default function(ioWithClient: socketIo.Namespace) {
-  const messageDb = new ArrayMessageDb();
+  const messageDb = new ArrayMessageDB();
 
   ioWithClient.on('connection', async socket => {
     socket.emit('all-messages', {
